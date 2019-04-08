@@ -8,5 +8,7 @@ object Models {
 
   object CQRS{
     val getPoolSize = 5
+
+    val persistDir = "/tmp/distcache"
   }
 }

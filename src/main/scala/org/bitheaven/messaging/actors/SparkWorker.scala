@@ -9,8 +9,9 @@ class SparkWorker(replyTo:ActorRef) extends Actor with ActorLogging{
     case GetStore(idList) => {
       log.info(s"Spark worker got request for id list = $idList")
 
-      /** @TODO remove fake */
-      replyTo ! FromStore(Event(1, 1524322357, "remote_to_local_copy", "pre"))
+      /** @TODO remove fake
+        * Actual Spark RDD, DF or DS logic to be here */
+      replyTo ! FromStore(Event(idList(0), 1524322357, "remote_to_local_copy", "pre"))
     }
   }
 }

@@ -22,11 +22,10 @@ class Demo extends Actor with ActorLogging{
     val master = context.system.actorOf(Master.props(self), "masterActor")
     master ! Get(1)
 
-    /* demonstrate cache hit now */
     Thread.sleep(2000)
-    println("After some time ......")
     println("Scenario #2 - Cache hit")
-    master ! Get(1)
+    master ! Get(2)
+
     self ! FinishDemo
   }
 

@@ -6,7 +6,10 @@ import akka.routing.ConsistentHashingRouter.ConsistentHashMapping
 import org.bitheaven.Models.{CQRS, Event}
 import org.bitheaven.messaging.Messages._
 
+
 class Master(replyTo:ActorRef) extends Actor with ActorLogging{
+
+  /** @TODO when persistance is implemented - make putPool */
 
   val getPool = context.actorOf(
     ConsistentHashingPool(CQRS.getPoolSize, hashMapping = hashMapping).props(CacheWorker.props(self)),
@@ -19,7 +22,6 @@ class Master(replyTo:ActorRef) extends Actor with ActorLogging{
   }
 
   val sparkWorker = context.actorOf(SparkWorker.props(self), "sparkWorker")
-
 
   override def receive: Receive = {
     case g:Get =>{
