@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="sbt: io.swaydb:compression_2.12:0.8-beta.7:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/io.swaydb/compression_2.12/jars/compression_2.12-0.8-beta.7.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/io.swaydb/compression_2.12/srcs/compression_2.12-0.8-beta.7-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
