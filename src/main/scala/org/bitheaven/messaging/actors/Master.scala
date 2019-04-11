@@ -3,7 +3,7 @@ package org.bitheaven.messaging.actors
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import akka.routing.{ConsistentHashingPool, ConsistentHashingRoutingLogic}
 import akka.routing.ConsistentHashingRouter.ConsistentHashMapping
-import org.bitheaven.Models.{CQRS, Event}
+import org.bitheaven.Models.{CacheConfig, Event}
 import org.bitheaven.messaging.Messages._
 
 
@@ -11,8 +11,8 @@ class Master(replyTo:ActorRef) extends Actor with ActorLogging{
 
   /** @TODO when persistance is implemented - make putPool */
 
-  val getPool = context.actorOf(
-    ConsistentHashingPool(CQRS.getPoolSize, hashMapping = hashMapping).props(CacheWorker.props(self)),
+  val cachePool = context.actorOf(
+    ConsistentHashingPool(CacheConfig.cacheWorkersPoolSize, hashMapping = hashMapping).props(CacheWorker.props(self)),
     "hashRouter"
   )
 
@@ -26,11 +26,13 @@ class Master(replyTo:ActorRef) extends Actor with ActorLogging{
   override def receive: Receive = {
     case g:Get =>{
       log.info(s"Master received Get for id = ${g.id}")
-      getPool ! GetCache(g.id)
+      cachePool ! GetCache(g.id)
     }
 
     case MissCache(id) => {
       log.info(s"Missed cache for id = $id")
+
+      /** @TODO instead if driver call per id - just accumulate miss-cache id list and do one call*/
       sparkWorker ! GetStore(Seq(id))
     }
 
@@ -41,7 +43,7 @@ class Master(replyTo:ActorRef) extends Actor with ActorLogging{
 
     case FromStore(ev) => {
       log.info(s"Store hit: $ev")
-      getPool ! PutCache(ev.id, ev)
+      cachePool ! PutCache(ev.id, ev)
       replyTo ! ev
     }
   }

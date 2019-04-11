@@ -1,16 +1,18 @@
 package org.bitheaven.messaging.actors
 
-import java.io.File
-
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
-import org.bitheaven.Models.{CQRS, Event}
+import org.bitheaven.Models.{CacheConfig, Event}
 import org.bitheaven.messaging.Messages.{FromCache, GetCache, MissCache, PutCache}
 
-import scala.collection.mutable
+import swaydb._
+import swaydb.serializers.Default._
+import org.bitheaven.persistance.SerDe._
+
 
 class CacheWorker(replyTo: ActorRef) extends Actor with ActorLogging{
-  val cache = mutable.HashMap[Long, Event]()
-  new File(s"${CQRS.persistDir}/${self.path.name}").mkdirs()
+  val db = persistent.Map[Long, Event](dir = getCachePath).get
+
+  def getCachePath = s"${CacheConfig.persistBaseDir}/${self.path.name}"
 
   override def receive: Receive = {
     case GetCache(id) => {
@@ -27,11 +29,10 @@ class CacheWorker(replyTo: ActorRef) extends Actor with ActorLogging{
     }
   }
 
-  def getCache(id:Long) = cache.get(id)
+  def getCache(id:Long) = db.get(id).get
 
-  def putCache(id:Long, event: Event) = {
-    cache.put(id, event)
-  }
+  def putCache(id:Long, event: Event) = db.put(id, event).get
+
 }
 
 

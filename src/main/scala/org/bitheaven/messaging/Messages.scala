@@ -12,5 +12,6 @@ object Messages {
   final case class MissCache(id:Long)
 
   object StartDemoSimple
+  object StartDemoPersist
   object FinishDemo
 }

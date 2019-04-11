@@ -4,11 +4,11 @@ object Models {
 
   /* So case pattern could be introduced on future, only if multitype cache will be needed */
   abstract class DataRow(id:Long)
-  case class Event(id:Long, event_is:Long, stage:String, dataset:String) extends  DataRow(id)
+  case class Event(id:Long, event_ts:Long, stage:String, dataset:String) extends  DataRow(id)
 
-  object CQRS{
-    val getPoolSize = 5
 
-    val persistDir = "/tmp/distcache"
+  object CacheConfig{
+    val cacheWorkersPoolSize = 5
+    val persistBaseDir = "/tmp/distcache"
   }
 }
