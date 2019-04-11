@@ -4,6 +4,7 @@ import org.bitheaven.Models.Event
 import swaydb.data.slice.Slice
 import swaydb.serializers.Serializer
 
+/** SerDe represents Cache SerDe implemetation - SwayDB in this demo */
 object SerDe {
 
     implicit object EventSerializer extends Serializer[Event] {

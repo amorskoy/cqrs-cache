@@ -5,6 +5,7 @@ import org.bitheaven.Models.Event
 import org.bitheaven.messaging.Messages.{FinishDemo, Get, StartDemoSimple}
 
 
+/** Entry point for all demos. Just one demo in this case */
 class Demo extends Actor with ActorLogging{
   override def receive: Receive = {
     case StartDemoSimple => demoSimple
@@ -16,7 +17,8 @@ class Demo extends Actor with ActorLogging{
     }
   }
 
-
+  /** Simple cache miss -> cache put -> cache hit demo
+    * @todo spark worker uses emulated Spark logic, nothing interesting there */
   def demoSimple = {
     println("Scenario #1 - Missed cache")
     log.info("Starting simple demo")

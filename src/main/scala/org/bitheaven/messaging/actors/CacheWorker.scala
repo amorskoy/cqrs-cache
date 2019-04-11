@@ -8,8 +8,16 @@ import swaydb._
 import swaydb.serializers.Default._
 import org.bitheaven.persistance.SerDe._
 
-
+/** CacheWorker represents cache logic as Actor backed by SwayDB persistance
+  * @todo rethink put/get vs AkkaStreams mat for sink/source
+  * */
 class CacheWorker(replyTo: ActorRef) extends Actor with ActorLogging{
+  /* cache persistance backend */
+  /** @todo Cache levels config tu be tuned into in-mem with thresh-driven persist,
+    *       also segment tuning
+    *       also sway paralelism tuning vs actor paralelism
+    * @see http://www.swaydb.io/configuring-levels/
+    * */
   val db = persistent.Map[Long, Event](dir = getCachePath).get
 
   def getCachePath = s"${CacheConfig.persistBaseDir}/${self.path.name}"
@@ -29,8 +37,10 @@ class CacheWorker(replyTo: ActorRef) extends Actor with ActorLogging{
     }
   }
 
+  /** Get event from cache */
   def getCache(id:Long) = db.get(id).get
 
+  /** Put event into cache */
   def putCache(id:Long, event: Event) = db.put(id, event).get
 
 }

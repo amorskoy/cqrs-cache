@@ -4,6 +4,7 @@ import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import org.bitheaven.Models.Event
 import org.bitheaven.messaging.Messages.{FromStore, GetStore}
 
+/**SparkWorker is just a stub Actor, emulating actual RDD/DF/DS driver calls*/
 class SparkWorker(replyTo:ActorRef) extends Actor with ActorLogging{
   override def receive: Receive = {
     case GetStore(idList) => {

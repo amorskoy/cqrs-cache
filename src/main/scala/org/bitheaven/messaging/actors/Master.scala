@@ -6,10 +6,8 @@ import akka.routing.ConsistentHashingRouter.ConsistentHashMapping
 import org.bitheaven.Models.{CacheConfig, Event}
 import org.bitheaven.messaging.Messages._
 
-
+/**Master is a cache facade, hiding cache complexities from uter world*/
 class Master(replyTo:ActorRef) extends Actor with ActorLogging{
-
-  /** @TODO when persistance is implemented - make putPool */
 
   val cachePool = context.actorOf(
     ConsistentHashingPool(CacheConfig.cacheWorkersPoolSize, hashMapping = hashMapping).props(CacheWorker.props(self)),
